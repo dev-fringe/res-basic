@@ -1,6 +1,5 @@
 package dev.fringe.app;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -8,22 +7,19 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
 import org.springframework.web.client.RestTemplate;
 
-import dev.fringe.app.supprt.ApiRestLoggingRequestInterceptor;
+import dev.fringe.app.config.RestTemplateConfig;
 
+@Import({RestTemplateConfig.class})
+@ComponentScan("dev.fringe.app.service")
 public class Main implements InitializingBean {
 	
 	@Value("${url:https://api.upbit.com/v1/market/all?isDetails=false}") String url;
 	@Autowired RestTemplate restTemplate;
 	
-	@Bean
-	public RestTemplate restTemplate() {
-		RestTemplate restTemplate = new RestTemplate();
-        restTemplate.setInterceptors(Collections.singletonList(new ApiRestLoggingRequestInterceptor()));
-		return restTemplate;
-	}
 	public static void main(String[] args) {
 		new AnnotationConfigApplicationContext(Main.class);
 	}
